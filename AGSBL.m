@@ -4,10 +4,10 @@
 % global lamda omega beta rho alpha_ind alpha_c pai w
 global M L N Np a b c d e f g h A Y It Et
 
-M = 100; % Number of antenna
-L = 144; % Number of multipaths
-N = 2048; % Number of subcarriers
-Np = 144; % Number of pilots
+M = 6; % Number of antenna
+L = 12; % Number of multipaths
+N = 20; % Number of subcarriers
+Np = 12; % Number of pilots
 
 a = 1e-2; % Predefine parameters
 b = 1e-6;
@@ -61,12 +61,12 @@ for i = 1:M
 end
 
 % using quation(36) to get q_pi
-tau_1 = zeros(100,1);
+tau_1 = zeros(M,1);
 for k = 1:M-1
     tau_1(k) = sum(q_mk(:,k))+1;
 end
 
-tau_2 = zeros(100,1);
+tau_2 = zeros(M,1);
 for i = 1:M-1
     tau_2(i) = sum(sum(q_mk(:,i+1:M)))+c/d;
 end

@@ -18,7 +18,7 @@ for l = 1:L
 end
 
 mu = zeros(L,M);
-T = cell(100,1);
+T = cell(M,1);
 
 for i = 1:M
     T{i} = inv(betta_es*(A')*A+diag(d_matrix(:,i)));
