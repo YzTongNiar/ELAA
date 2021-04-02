@@ -1,13 +1,12 @@
 %% Initialization
 
-% global M N L Np a b c e d f g h It Et
-% global lamda omega beta rho alpha_ind alpha_c pai w
-global M L N Np a b c d e f g h A Y It Et
+global M L N Np a b c d e f g h A X Y n It Et beta
+load H_ad.mat
 
-M = 6; % Number of antenna
-L = 12; % Number of multipaths
-N = 20; % Number of subcarriers
-Np = 12; % Number of pilots
+M = 100; % Number of antenna
+L = 1024; % Number of multipaths
+N = 2040; % Number of subcarriers
+Np = 1024; % Number of pilots
 
 a = 1e-2; % Predefine parameters
 b = 1e-6;
@@ -17,7 +16,7 @@ e = 1e-4;
 f = 1e-6;
 g = 0.8;
 h = 0.2;
-It = 30; % Maximum iterations
+It = 100; % Maximum iterations
 Et = 1e-4; % Error tolerance
 
 % random parameter generating
@@ -78,26 +77,28 @@ end
 q_pi(M) = 1; 
 
 % Channel Matirx
-[interval,alpha_dp] = DP(w,alpha_c,M,L);
-X = channel(alpha_ind,alpha_dp,rho,M,L);
+% [interval,alpha_dp] = DP(w,alpha_c,M,L);
+% X = channel(alpha_ind,alpha_dp,rho,M,L);
+X = H_ad';
 
 % Obervation
 % DFT matrix Np*L
 A = dftmtx(N) ;
 A = A(1:Np,1:L);
 
-% generate pilots
-theta = zeros(Np,1);
-for i = 1:Np
-    theta(i) = unifrnd(0,2*pi);
-end
-for i = 1:Np
-    theta(i) = exp(1i*theta(i));
-end 
-p = diag(theta);
-
-% matreix A Np*L
-A = p*A;
+% % generate pilots
+% theta = zeros(Np,1);
+% 
+% for i = 1:Np
+%     theta(i) = unifrnd(0,2*pi);
+% end
+% for i = 1:Np
+%     theta(i) = exp(1i*theta(i));
+% end 
+% p = diag(theta);
+% 
+% % matreix A Np*L
+% A = p*A;
 
 % generate complex Gaussian noise Np*M
 n = zeros(Np,M);
@@ -134,24 +135,33 @@ it = 0;
 while(1)
     % step1
     [mu,T] = step1(beta_es,rho_es,alpha_c_es,alpha_ind_es,q_mk);
+    disp("step1 finish");
     % step2
     [alpha_c_es,ln_alpha_c_es,X_2_es] = step2(rho_es,mu,q_mk,T);
+     disp("step2 finish");
     % step3
     [alpha_ind_es,ln_alpha_ind_es] = step3(rho_es,X_2_es);
+     disp("step3 finish");
     % step4
     [beta_es] = step4(mu,T);
+     disp("step4 finish");
     % step5
     [eta,rho_es] = step5(q_mk,ln_alpha_c_es,alpha_c_es,X_2_es,...
             omega_es,ln_1minus_omega_es,ln_alpha_ind_es);
+     disp("step5 finish");
     % step6
     [ln_omega_es,ln_1minus_omega_es] = step6(rho_es);
+     disp("step6 finish");
     % step7
     [ln_pi_es,ln_1minus_pi_es] = step7(q_mk,lamda_es);
+     disp("step7 finish");
     % step8
     [lamda_es] = step8(ln_1minus_pi_es);
+     disp("step8 finish");
     % step9
     [q_mk] = step9(rho_es,ln_alpha_c_es...
     ,alpha_c_es,X_2_es,ln_pi_es,ln_1minus_pi_es);
+     disp("step7 finish");
     % step10
     it = it+1;
     
