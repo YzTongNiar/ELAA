@@ -15,9 +15,9 @@ for i = 1:size(beta_list,2)
 end
 
 x = 10:5:30;
-plot(x,err_list,x,err_list2);
+plot(x,err_list,x,err_list2,x,err_list3);
 set(gca,'xtick',10:5:30);
 xlabel('SNR/dB');
 ylabel('MSE');
-legend('LS','genie LS')
+legend('LS','genie LS','AGSBL')
 hold on;

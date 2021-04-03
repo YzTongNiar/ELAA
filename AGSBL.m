@@ -95,7 +95,8 @@ mu = zeros(L,M);   % store the estiamtion of the current iteration
 X_2_es = zeros(L,M); % store the estimatuion of norm |X|^2
 
 % set initial parameter estimation
-beta_es = e/f;
+%beta_es = e/f;
+beta_es = 10;
 omega_es = g/(g+h);
 lamda_es = c/d;
 ln_omega_es = psi(g) - psi(g+h);
@@ -104,10 +105,17 @@ rho_es = g/(g+h)*ones(L,M);
 alpha_c_es = a/b*ones(L,M);
 alpha_ind_es = a/b*ones(L,M);
 
-% set iteration index
-it = 0;
+% set arrays to store the data
+err_list3 = zeros(1,5);
+beta_list = [10 10^1.5 100 10^2.5 1000];
 
 %% While Loop
+for i = 1:size(beta_list,2)
+    beta = beta_list(i);
+    beta_es = beta_list(i);
+    n = CNormal(0,1/beta,144,100);
+    Y = A*X+n;
+    it = 0;
 while(1)
     % step1
     [mu,T] = step1(beta_es,rho_es,alpha_c_es,alpha_ind_es,q_mk);
@@ -149,4 +157,6 @@ while(1)
     % Update the estiamtion
     X_es = mu;
     disp(it +" : "+norm(X_es-X,2)/(L*M));
+end
+err_list3(i) = norm(X_es-X,2)/(L*M);
 end
